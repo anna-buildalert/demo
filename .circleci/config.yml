@@ -3,7 +3,7 @@ version: 2.1
 # set project level environment variables
 
 orbs:
-  buildalert: buildalert/demo@dev:0.0.1
+  buildalert: buildalert/demo@dev:0.0.2
 
 jobs:
   build:
