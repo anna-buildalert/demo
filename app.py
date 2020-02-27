@@ -63,8 +63,9 @@ def main():
     repo_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR')
     circle_token_env_var = os.getenv('SLACK_MONITOR_CIRCLE_TOKEN_ENVVAR')
     slack_app_url_env_var = os.getenv('SLACK_MONITOR_SLACK_APP_URL_ENVVAR')
-    gh_token_env_var = os.getenv('GITHUB_TOKEN_ENVVAR')
+    gh_token_env_var = os.getenv('SLACK_MONITOR_GITHUB_TOKEN_ENVVAR')
     pr_num = os.getenv('CI_PULL_REQUEST').split("/")[-1]
+    cancel_msg = os.getenv('CANCEL_MESSAGE')
     
     # circle project vars
     org = os.getenv(org_env_var)
@@ -87,19 +88,6 @@ def main():
     alert_threshold_build = int(
         os.getenv('SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS')
     )
-
-    url = f"https://api.github.com/repos/{org}/{repo}/issues/{pr_num}/comments"
-
-    payload = "{\n  \"body\": \"Me too from orb\"\n}"
-    headers = {
-      'Accept': 'application/vnd.github.comfort-fade-preview+json',
-      'Authorization': f'token {gh_token}',
-      'Content-Type': 'application/json'
-    }
-
-    response = requests.request("POST", url, headers=headers, data = payload)
-
-    print(response.text.encode('utf8'))
 
     user_alert = False
     build_alert = False
@@ -158,8 +146,18 @@ def main():
                     'Circle-Token': circle_token
                 }
                 r = requests.post(f'https://circleci.com/api/v2/workflow/{workflow_id}/cancel', headers=headers)
-                print(r.content)
-
+            print('MAKE GH REQ')
+            url = f"https://api.github.com/repos/{org}/{repo}/issues/{pr_num}/comments"
+            payload = f"{{\n  \"body\": \"{cancel_msg}\"\n}}"
+            print(payload)
+            # payload = f'{{"body": {cancel_msg}}}'
+            headers = {
+              'Accept': 'application/vnd.github.comfort-fade-preview+json',
+              'Authorization': f'token {gh_token}',
+              'Content-Type': 'application/json'
+            }
+            response = requests.request("POST", url, headers=headers, data = payload)
+            print(response.content)
     pipelines_run_in_last_minute = []
     for pipeline in pipelines:
         # created_at_str = pipeline['created_at'][:-1]
