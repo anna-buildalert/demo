@@ -63,7 +63,9 @@ def main():
     repo_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR')
     circle_token_env_var = os.getenv('SLACK_MONITOR_CIRCLE_TOKEN_ENVVAR')
     slack_app_url_env_var = os.getenv('SLACK_MONITOR_SLACK_APP_URL_ENVVAR')
-
+    gh_token_env_var = os.getenv('GITHUB_TOKEN_ENVVAR')
+    pr_num = os.getenv('CI_PULL_REQUEST').split("/")[-1]
+    
     # circle project vars
     org = os.getenv(org_env_var)
     repo = os.getenv(repo_env_var)
@@ -71,6 +73,7 @@ def main():
     # secrets
     circle_token = os.getenv(circle_token_env_var)
     slack_app_url = os.getenv(slack_app_url_env_var)
+    gh_token = os.getenv(gh_token_env_var)
 
     # from parameters
     threshold_seconds = int(
@@ -84,6 +87,19 @@ def main():
     alert_threshold_build = int(
         os.getenv('SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS')
     )
+
+    url = f"https://api.github.com/repos/{org}/{repo}/issues/{pr_num}/comments"
+
+    payload = "{\n  \"body\": \"Me too from orb\"\n}"
+    headers = {
+      'Accept': 'application/vnd.github.comfort-fade-preview+json',
+      'Authorization': f'token {gh_token}',
+      'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data = payload)
+
+    print(response.text.encode('utf8'))
 
     user_alert = False
     build_alert = False
@@ -133,7 +149,7 @@ def main():
             }
             requests.post(slack_app_url, json=user_alert_msg)
 
-            # identify and cancel workflows by this user
+            # identify and cancel workflows by this user, then comment on PR
             errant_workflows = func_errant_workflows(pipelines_by_errant_actor, circle_token)
             for workflow_id in errant_workflows:
                 headers = {
