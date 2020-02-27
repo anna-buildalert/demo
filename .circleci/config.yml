@@ -15,7 +15,7 @@ workflows:
     jobs:
       - buildalert/build:
           alert-threshold-seconds: 120
-          alert-threshold-max-builds: 5
+          alert-threshold-max-builds-per-user: 5
           alert-threshold-max-builds: 12    
           circle-project-username-envvar: SLACK_MONITOR_CIRCLE_PROJECT_USERNAME
           circle-project-reponame-envvar: SLACK_MONITOR_CIRCLE_PROJECT_REPONAME
