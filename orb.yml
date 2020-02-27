@@ -68,7 +68,10 @@ python_script: &python_script |
       repo_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR')
       circle_token_env_var = os.getenv('SLACK_MONITOR_CIRCLE_TOKEN_ENVVAR')
       slack_app_url_env_var = os.getenv('SLACK_MONITOR_SLACK_APP_URL_ENVVAR')
-
+      gh_token_env_var = os.getenv('SLACK_MONITOR_GITHUB_TOKEN_ENVVAR')
+      pr_num = os.getenv('CI_PULL_REQUEST').split("/")[-1]
+      cancel_msg = os.getenv('CANCEL_MESSAGE')
+      
       # circle project vars
       org = os.getenv(org_env_var)
       repo = os.getenv(repo_env_var)
@@ -76,6 +79,7 @@ python_script: &python_script |
       # secrets
       circle_token = os.getenv(circle_token_env_var)
       slack_app_url = os.getenv(slack_app_url_env_var)
+      gh_token = os.getenv(gh_token_env_var)
 
       # from parameters
       threshold_seconds = int(
@@ -138,7 +142,7 @@ python_script: &python_script |
               }
               requests.post(slack_app_url, json=user_alert_msg)
 
-              # identify and cancel workflows by this user
+              # identify and cancel workflows by this user, then comment on PR
               errant_workflows = func_errant_workflows(pipelines_by_errant_actor, circle_token)
               for workflow_id in errant_workflows:
                   headers = {
@@ -147,8 +151,18 @@ python_script: &python_script |
                       'Circle-Token': circle_token
                   }
                   r = requests.post(f'https://circleci.com/api/v2/workflow/{workflow_id}/cancel', headers=headers)
-                  print(r.content)
-
+              print('MAKE GH REQ')
+              url = f"https://api.github.com/repos/{org}/{repo}/issues/{pr_num}/comments"
+              payload = f"{{\n  \"body\": \"{cancel_msg}\"\n}}"
+              print(payload)
+              # payload = f'{{"body": {cancel_msg}}}'
+              headers = {
+                'Accept': 'application/vnd.github.comfort-fade-preview+json',
+                'Authorization': f'token {gh_token}',
+                'Content-Type': 'application/json'
+              }
+              response = requests.request("POST", url, headers=headers, data = payload)
+              print(response.content)
       pipelines_run_in_last_minute = []
       for pipeline in pipelines:
           # created_at_str = pipeline['created_at'][:-1]
