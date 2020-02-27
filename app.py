@@ -62,8 +62,8 @@ def flatten(l):
 def main():
     vcs = 'gh'
 
-    org_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_USERNAME_ENVVAR')
-    repo_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR')
+    # org_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_USERNAME_ENVVAR')
+    # repo_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR')
     circle_token_env_var = os.getenv('SLACK_MONITOR_CIRCLE_TOKEN_ENVVAR')
     slack_app_url_env_var = os.getenv('SLACK_MONITOR_SLACK_APP_URL_ENVVAR')
     gh_token_env_var = os.getenv('SLACK_MONITOR_GITHUB_TOKEN_ENVVAR')
@@ -71,8 +71,8 @@ def main():
     cancel_msg = os.getenv('CANCEL_MESSAGE')
     
     # circle project vars
-    org = os.getenv(org_env_var)
-    repo = os.getenv(repo_env_var)
+    org = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_ORG')
+    repo = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME')
 
     # secrets
     circle_token = os.getenv(circle_token_env_var)
@@ -166,19 +166,26 @@ def main():
                   'Content-Type': 'text/plain'
                 }
 
-                response = requests.request("GET", url, headers=headers, data = payload)
-                if len(response):
-                    url = response[0]['issue_url']
-                    payload = f"{{\n  \"body\": \"{cancel_msg}\"\n}}"
-                    # print(payload)
-                    # payload = f'{{"body": {cancel_msg}}}'
-                    headers = {
-                      'Accept': 'application/vnd.github.comfort-fade-preview+json',
-                      'Authorization': f'token {gh_token}',
-                      'Content-Type': 'application/json'
-                    }
-                    response = requests.request("POST", url, headers=headers, data = payload)
-                    # print(response.content)
+                response = json.loads(requests.request("GET", url, headers=headers, data = payload).text)
+
+                # # comment on GH PR
+                # if not isinstance(response, list):
+                #     print(f'****************** GITHUB RESPONSE: GET PRS FOR {sha} ******************')
+                #     print(response)
+                # if len(response) and isinstance(response, list):
+                #     url = response[0]['issue_url']
+                #     payload = f"{{\n  \"body\": \"{cancel_msg}\"\n}}"
+                #     # print(payload)
+                #     # payload = f'{{"body": {cancel_msg}}}'
+                #     headers = {
+                #       'Accept': 'application/vnd.github.comfort-fade-preview+json',
+                #       'Authorization': f'token {gh_token}',
+                #       'Content-Type': 'application/json'
+                #     }
+                #     response = requests.request("POST", url, headers=headers, data = payload)
+                #     print('****************** GITHUB RESPONSE: POST COMMENT ******************')
+                #     print(response.content)
+
     pipelines_run_in_last_minute = []
     for pipeline in pipelines:
         # created_at_str = pipeline['created_at'][:-1]

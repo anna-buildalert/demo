@@ -67,8 +67,8 @@ python_script: &python_script |
   def main():
       vcs = 'gh'
 
-      org_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_USERNAME_ENVVAR')
-      repo_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR')
+      # org_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_USERNAME_ENVVAR')
+      # repo_env_var = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR')
       circle_token_env_var = os.getenv('SLACK_MONITOR_CIRCLE_TOKEN_ENVVAR')
       slack_app_url_env_var = os.getenv('SLACK_MONITOR_SLACK_APP_URL_ENVVAR')
       gh_token_env_var = os.getenv('SLACK_MONITOR_GITHUB_TOKEN_ENVVAR')
@@ -76,8 +76,8 @@ python_script: &python_script |
       cancel_msg = os.getenv('CANCEL_MESSAGE')
       
       # circle project vars
-      org = os.getenv(org_env_var)
-      repo = os.getenv(repo_env_var)
+      org = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_ORG')
+      repo = os.getenv('SLACK_MONITOR_CIRCLE_PROJECT_REPONAME')
 
       # secrets
       circle_token = os.getenv(circle_token_env_var)
@@ -171,19 +171,26 @@ python_script: &python_script |
                     'Content-Type': 'text/plain'
                   }
 
-                  response = requests.request("GET", url, headers=headers, data = payload)
-                  if len(response):
-                      url = response[0]['issue_url']
-                      payload = f"{{\n  \"body\": \"{cancel_msg}\"\n}}"
-                      # print(payload)
-                      # payload = f'{{"body": {cancel_msg}}}'
-                      headers = {
-                        'Accept': 'application/vnd.github.comfort-fade-preview+json',
-                        'Authorization': f'token {gh_token}',
-                        'Content-Type': 'application/json'
-                      }
-                      response = requests.request("POST", url, headers=headers, data = payload)
-                      # print(response.content)
+                  response = json.loads(requests.request("GET", url, headers=headers, data = payload).text)
+
+                  # # comment on GH PR
+                  # if not isinstance(response, list):
+                  #     print(f'****************** GITHUB RESPONSE: GET PRS FOR {sha} ******************')
+                  #     print(response)
+                  # if len(response) and isinstance(response, list):
+                  #     url = response[0]['issue_url']
+                  #     payload = f"{{\n  \"body\": \"{cancel_msg}\"\n}}"
+                  #     # print(payload)
+                  #     # payload = f'{{"body": {cancel_msg}}}'
+                  #     headers = {
+                  #       'Accept': 'application/vnd.github.comfort-fade-preview+json',
+                  #       'Authorization': f'token {gh_token}',
+                  #       'Content-Type': 'application/json'
+                  #     }
+                  #     response = requests.request("POST", url, headers=headers, data = payload)
+                  #     print('****************** GITHUB RESPONSE: POST COMMENT ******************')
+                  #     print(response.content)
+
       pipelines_run_in_last_minute = []
       for pipeline in pipelines:
           # created_at_str = pipeline['created_at'][:-1]
@@ -238,11 +245,13 @@ jobs:
     resource_class: small
     environment:
       # map environment variables
-      SLACK_MONITOR_CIRCLE_PROJECT_USERNAME_ENVVAR: << parameters.circle-project-username-envvar >>
-      SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR: << parameters.circle-project-reponame-envvar >>
+      # SLACK_MONITOR_CIRCLE_PROJECT_USERNAME_ENVVAR: << parameters.circle-project-username-envvar >>
+      # SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR: << parameters.circle-project-reponame-envvar >>
       SLACK_MONITOR_CIRCLE_TOKEN_ENVVAR: << parameters.circle-token-envvar >>
       SLACK_MONITOR_SLACK_APP_URL_ENVVAR: << parameters.slack-app-url-envvar >>
       SLACK_MONITOR_GITHUB_TOKEN_ENVVAR: << parameters.gh-token-env-var >>
+      SLACK_MONITOR_CIRCLE_PROJECT_REPONAME: << parameters.circle-project-reponame >>
+      SLACK_MONITOR_CIRCLE_PROJECT_ORG: << parameters.circle-project-org >>
       SLACK_MONITOR_PARAM_THRESHOLD_SECONDS: << parameters.alert-threshold-seconds >>
       SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS_PER_USER: << parameters.alert-threshold-max-builds-per-user >>
       SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS: << parameters.alert-threshold-max-builds >>
@@ -257,12 +266,12 @@ jobs:
           name: Run monitoring script
           command: *python_script
     parameters:
-      circle-project-username-envvar:
-        type: env_var_name
-        default: CIRCLE_PROJECT_USERNAME
-      circle-project-reponame-envvar:
-        type: env_var_name
-        default: CIRCLE_PROJECT_REPONAME
+      circle-project-org:
+        type: string
+        # default: CIRCLE_PROJECT_USERNAME
+      circle-project-reponame:
+        type: string
+        # default: CIRCLE_PROJECT_REPONAME
       circle-token-envvar:
         type: env_var_name
         # default: SLACK_MONITOR_CIRCLE_TOKEN
