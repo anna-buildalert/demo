@@ -7,7 +7,13 @@ orbs:
 
 
 workflows:
-  test:
+  monitor-every-minute:
+    - schedule:
+        cron: "* * * * *"
+        filters:
+          branches:
+            only:
+              - master
     jobs:
       - buildalert/build:
           alert-threshold-seconds: 50000
