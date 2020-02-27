@@ -5,23 +5,23 @@ orbs:
 
 workflows:
   monitor-every-minute:
-    # triggers:
-    #   - schedule:
-    #       cron: "* * * * *"
-    #       filters:
-    #         branches:
-    #           only:
-    #             - master
+    triggers:
+      - schedule:
+          cron: "* * * * *"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - buildalert/build:
-          alert-threshold-seconds: 50000
-          alert-threshold-max-builds-per-user: 0
-          alert-threshold-max-builds: 0
           circle-project-org: 'annapamma'
           circle-project-reponame: 'sandbox'
           circle-token-envvar: SLACK_MONITOR_CIRCLE_TOKEN
           slack-app-url-envvar: SLACK_MONITOR_SLACK_APP_URL
           gh-token-env-var: SLACK_MONITOR_GH_TOKEN
+          alert-threshold-seconds: 50000
+          alert-threshold-max-builds-per-user: 0
+          alert-threshold-max-builds: 0
           # cancel-user-workflows: true
           # possible: trusted-users: enum 
           # || check GH API and set trusted users at a longer cycle, issue is GH API rate limiting
