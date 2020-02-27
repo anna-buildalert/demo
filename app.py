@@ -149,7 +149,7 @@ def main():
         # created_at_str = pipeline['created_at'][:-1]
         created_at_str = pipeline['created_at']
         created_at = datetime.datetime.fromisoformat(created_at_str[:-1])
-        if (current_time - created_at).seconds < threshold_seconds:
+        if (current_time - created_at).seconds < threshold_seconds and (current_time-created_at).days == 0:
             pipelines_run_in_last_minute.append(created_at_str)
 
     if len(pipelines_run_in_last_minute) >= alert_threshold_build:
