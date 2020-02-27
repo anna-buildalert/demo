@@ -5,13 +5,6 @@ version: 2.1
 orbs:
   buildalert: buildalert/demo@dev:0.0.2
 
-jobs:
-  build:
-    docker:
-      - image: circleci/python:latest
-    steps:
-      - run: echo 'hello world'
-
 
 workflows:
   test:
