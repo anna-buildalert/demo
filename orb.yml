@@ -111,7 +111,7 @@ python_script: &python_script |
       print(k_actor_v_pipeline_created_limit)
       
       for actor, pipeline_ids in k_actor_v_pipeline_created_limit.items():
-          if len(pipeline_ids) > alert_threshold_user:
+          if len(pipeline_ids) >= alert_threshold_user:
               user_alert = True
               pipelines_by_errant_actor = k_actor_v_pipelines[actor]
               alert_text = f'*{actor}* has triggered {len(pipeline_ids)} pipelines in the past {threshold_seconds} seconds\n ' \
@@ -157,7 +157,7 @@ python_script: &python_script |
           if (current_time - created_at).seconds < threshold_seconds:
               pipelines_run_in_last_minute.append(created_at_str)
 
-      if len(pipelines_run_in_last_minute) > alert_threshold_build:
+      if len(pipelines_run_in_last_minute) >= alert_threshold_build:
           build_alert = True
           alert_text = f"There have been *{len(pipelines_run_in_last_minute)} pipelines* triggered between " \
                        f"{pipelines_run_in_last_minute[-1]} and {current_time}."
