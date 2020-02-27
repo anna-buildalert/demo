@@ -17,7 +17,7 @@ workflows:
   test:
     jobs:
       - buildalert/build:
-        alert-threshold-seconds: 50000
-        alert-threshold-max-builds-per-user: 0
-        alert-threshold-max-builds-prev-minute: 0    
+          alert-threshold-seconds: 50000
+          alert-threshold-max-builds-per-user: 0
+          alert-threshold-max-builds-prev-minute: 0    
 
