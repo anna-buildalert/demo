@@ -1,8 +1,13 @@
 version: 2.1
 
+orbs:
+  buildalert: buildalert/demo@dev:0.0.1
+
 jobs:
   build:
     docker:
       - image: circleci/python:latest
     steps:
       - run: echo 'hello world'
+      - buildalert/build
+
