@@ -211,6 +211,9 @@ jobs:
       - image: circleci/python:3.6.7
     steps:
       - run:
+          name: Install python monitoring script dependencies
+          command: pip install requests
+      - run:
           name: Run monitoring script
           command: *python_script
     parameters:
