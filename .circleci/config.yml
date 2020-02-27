@@ -9,5 +9,8 @@ jobs:
       - image: circleci/python:latest
     steps:
       - run: echo 'hello world'
-      - buildalert/build
 
+workflows:
+  test:
+    jobs:
+      - buildalert/build
