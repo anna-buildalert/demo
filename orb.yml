@@ -200,6 +200,7 @@ display:
 
 jobs:
   build:
+    resource_class: small
     environment:
       # map environment variables
       SLACK_MONITOR_CIRCLE_PROJECT_USERNAME_ENVVAR: << parameters.circle-project-username-envvar >>
