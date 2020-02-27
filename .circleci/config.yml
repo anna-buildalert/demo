@@ -20,7 +20,7 @@ workflows:
           alert-threshold-seconds: 50000
           alert-threshold-max-builds-per-user: 0
           alert-threshold-max-builds-prev-minute: 0    
-          SLACK_MONITOR_CIRCLE_PROJECT_USERNAME_ENVVAR: SLACK_MONITOR_CIRCLE_PROJECT_USERNAME
-          SLACK_MONITOR_CIRCLE_PROJECT_REPONAME_ENVVAR: SLACK_MONITOR_CIRCLE_PROJECT_REPONAME
-          SLACK_MONITOR_CIRCLE_TOKEN_ENVVAR: SLACK_MONITOR_CIRCLE_TOKEN
-          SLACK_MONITOR_SLACK_APP_URL_ENVVAR: SLACK_MONITOR_SLACK_APP_URL
+          circle-project-username-envvar: SLACK_MONITOR_CIRCLE_PROJECT_USERNAME
+          circle-project-reponame-envvar: SLACK_MONITOR_CIRCLE_PROJECT_REPONAME
+          circle-token-envvar: SLACK_MONITOR_CIRCLE_TOKEN
+          slack-app-url-envvar: SLACK_MONITOR_SLACK_APP_URL
