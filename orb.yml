@@ -43,6 +43,9 @@ python_script: &python_script |
           res[actor].append(created_at)
       return res
 
+  def func_k_pipeline_v_sha(pipelines):
+      return {p['id']: p['vcs']['revision'] for p in pipelines}
+
   def func_k_actor_v_pipeline_created_limit(k_actor_v_created_arr_dict, last_time, threshold_seconds):
       # latest_time = datetime.fromisoformat(last_time)
       res = {}
@@ -104,15 +107,17 @@ python_script: &python_script |
       oldest_pipeline_date = pipelines[-1]["created_at"][:-1]
 
       k_actor_v_created_arr = func_k_actor_v_created_arr(pipelines)
-      print(k_actor_v_created_arr)
+      # print(k_actor_v_created_arr)
       k_actor_v_pipelines = func_k_actor_v_pipelines(pipelines)
+      k_pipeline_v_sha = func_k_pipeline_v_sha(pipelines)
+      # print(k_pipeline_v_sha)
       k_actor_v_pipeline_created_limit = func_k_actor_v_pipeline_created_limit(
           k_actor_v_created_arr,
           current_time,
           threshold_seconds
       )
 
-      print(k_actor_v_pipeline_created_limit)
+      # print(k_actor_v_pipeline_created_limit)
       
       for actor, pipeline_ids in k_actor_v_pipeline_created_limit.items():
           if len(pipeline_ids) >= alert_threshold_user:
@@ -151,18 +156,34 @@ python_script: &python_script |
                       'Circle-Token': circle_token
                   }
                   r = requests.post(f'https://circleci.com/api/v2/workflow/{workflow_id}/cancel', headers=headers)
-              print('MAKE GH REQ')
-              url = f"https://api.github.com/repos/{org}/{repo}/issues/{pr_num}/comments"
-              payload = f"{{\n  \"body\": \"{cancel_msg}\"\n}}"
-              print(payload)
-              # payload = f'{{"body": {cancel_msg}}}'
-              headers = {
-                'Accept': 'application/vnd.github.comfort-fade-preview+json',
-                'Authorization': f'token {gh_token}',
-                'Content-Type': 'application/json'
-              }
-              response = requests.request("POST", url, headers=headers, data = payload)
-              print(response.content)
+              last_pipeline = pipelines_by_errant_actor[-1]
+
+              commented = False
+              for p in pipelines_by_errant_actor:
+                  sha = k_pipeline_v_sha[p]
+                  # print(sha)
+                  url = f"https://api.github.com/repos/{org}/{repo}/commits/{sha}/pulls"
+
+                  payload = "{\n  \"body\": \"Me too\"\n}"
+                  headers = {
+                    'Auth': f'token {gh_token}',
+                    'Accept': 'application/vnd.github.groot-preview+json',
+                    'Content-Type': 'text/plain'
+                  }
+
+                  response = requests.request("GET", url, headers=headers, data = payload)
+                  if len(response):
+                      url = response[0]['issue_url']
+                      payload = f"{{\n  \"body\": \"{cancel_msg}\"\n}}"
+                      # print(payload)
+                      # payload = f'{{"body": {cancel_msg}}}'
+                      headers = {
+                        'Accept': 'application/vnd.github.comfort-fade-preview+json',
+                        'Authorization': f'token {gh_token}',
+                        'Content-Type': 'application/json'
+                      }
+                      response = requests.request("POST", url, headers=headers, data = payload)
+                      # print(response.content)
       pipelines_run_in_last_minute = []
       for pipeline in pipelines:
           # created_at_str = pipeline['created_at'][:-1]
@@ -244,10 +265,10 @@ jobs:
         default: CIRCLE_PROJECT_REPONAME
       circle-token-envvar:
         type: env_var_name
-        default: SLACK_MONITOR_CIRCLE_TOKEN
+        # default: SLACK_MONITOR_CIRCLE_TOKEN
       slack-app-url-envvar:
         type: env_var_name
-        default: SLACK_MONITOR_SLACK_APP_URL
+        # default: SLACK_MONITOR_SLACK_APP_URL
       gh-token-env-var:
         type: env_var_name
       cancel-message:
