@@ -111,7 +111,7 @@ def main():
             pipelines_by_errant_actor = k_actor_v_pipelines[actor]
             alert_text = f'*{actor}* has triggered {len(pipeline_ids)} pipelines in the past {threshold_seconds} seconds\n ' \
                          f'(since {current_time}).\n' \
-                         f'Any running workflows triggered since {oldest_pipeline_date} will be cancelled.'
+                         f'Any running workflows triggered by {actor} since {oldest_pipeline_date} will be cancelled.'
 
             user_alert_msg = {
                      "blocks": [
