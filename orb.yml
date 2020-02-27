@@ -236,7 +236,6 @@ jobs:
         default: SLACK_MONITOR_SLACK_APP_URL
       gh-token-env-var:
         type: env_var_name
-        default: ''
       cancel-message:
         type: string
         default: 'Your builds on CircleCI have exceeded the max builds allowed for a single user.'
