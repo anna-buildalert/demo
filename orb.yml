@@ -208,7 +208,7 @@ jobs:
       SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS_PER_USER: << parameters.alert-threshold-max-builds-per-user >>
       SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS: << parameters.alert-threshold-max-builds-prev-minute >>
     docker:
-      - image: circleci/python:3.6.7
+      - image: circleci/python:3.7.6
     steps:
       - run:
           name: Install python monitoring script dependencies
