@@ -15,8 +15,8 @@ workflows:
     jobs:
       - buildalert/build:
           alert-threshold-seconds: 120
-          alert-threshold-max-builds-per-user: 5
-          alert-threshold-max-builds-prev-minute: 12    
+          alert-threshold-max-builds: 5
+          alert-threshold-max-builds: 12    
           circle-project-username-envvar: SLACK_MONITOR_CIRCLE_PROJECT_USERNAME
           circle-project-reponame-envvar: SLACK_MONITOR_CIRCLE_PROJECT_REPONAME
           circle-token-envvar: SLACK_MONITOR_CIRCLE_TOKEN
@@ -24,3 +24,6 @@ workflows:
           # cancel-user-workflows: true
           # possible: trusted-users: enum 
           # || check GH API and set trusted users at a longer cycle, issue is GH API rate limiting
+
+# cost: https://circleci.com/api/v2/insights/gh/anna-buildalert/demo/workflows/monitor-every-minute
+# 3600 credits/day

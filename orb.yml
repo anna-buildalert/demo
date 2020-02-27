@@ -163,7 +163,7 @@ python_script: &python_script |
               alert_text = f"There have been *{len(pipelines_run_in_last_minute)} pipelines* triggered between " \
                            f"{pipelines_run_in_last_minute[-1]} and {current_time}."
           else: 
-              alert_text = f"There have been *{len(pipelines_run_in_last_minute)} pipelines* triggered between since {current_time}."
+              alert_text = f"There have been *{len(pipelines_run_in_last_minute)} pipelines* triggered since {current_time}."
           build_alert_msg = {
               "blocks": [
                   {
@@ -209,7 +209,7 @@ jobs:
       SLACK_MONITOR_SLACK_APP_URL_ENVVAR: << parameters.slack-app-url-envvar >>
       SLACK_MONITOR_PARAM_THRESHOLD_SECONDS: << parameters.alert-threshold-seconds >>
       SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS_PER_USER: << parameters.alert-threshold-max-builds-per-user >>
-      SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS: << parameters.alert-threshold-max-builds-prev-minute >>
+      SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS: << parameters.alert-threshold-max-builds >>
     docker:
       - image: circleci/python:3.7.6
     steps:
@@ -240,6 +240,6 @@ jobs:
         type: integer
         default: 5
       # max within a minute of the latest build that triggers an alert, must be < 30
-      alert-threshold-max-builds-prev-minute:
+      alert-threshold-max-builds:
         type: integer
         default: 5

@@ -158,7 +158,7 @@ def main():
             alert_text = f"There have been *{len(pipelines_run_in_last_minute)} pipelines* triggered between " \
                          f"{pipelines_run_in_last_minute[-1]} and {current_time}."
         else: 
-            alert_text = f"There have been *{len(pipelines_run_in_last_minute)} pipelines* triggered between since {current_time}."
+            alert_text = f"There have been *{len(pipelines_run_in_last_minute)} pipelines* triggered since {current_time}."
         build_alert_msg = {
             "blocks": [
                 {
