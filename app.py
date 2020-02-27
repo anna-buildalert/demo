@@ -67,7 +67,7 @@ def main():
     circle_token_env_var = os.getenv('SLACK_MONITOR_CIRCLE_TOKEN_ENVVAR')
     slack_app_url_env_var = os.getenv('SLACK_MONITOR_SLACK_APP_URL_ENVVAR')
     gh_token_env_var = os.getenv('SLACK_MONITOR_GITHUB_TOKEN_ENVVAR')
-    pr_num = os.getenv('CI_PULL_REQUEST').split("/")[-1]
+    # pr_num = os.getenv('CI_PULL_REQUEST').split("/")[-1]
     cancel_msg = os.getenv('CANCEL_MESSAGE')
     
     # circle project vars
