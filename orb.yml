@@ -235,8 +235,8 @@ jobs:
       # max builds triggered by a single user within threshold_seconds of the current time
       alert-threshold-max-builds-per-user:
         type: integer
-        default: 0
+        default: 5
       # max within a minute of the latest build that triggers an alert, must be < 30
       alert-threshold-max-builds-prev-minute:
         type: integer
-        default: 0
+        default: 5

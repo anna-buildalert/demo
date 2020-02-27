@@ -11,12 +11,16 @@ jobs:
       - image: circleci/python:latest
     steps:
       - run: echo 'hello world'
-
-workflows:
-  test:
-    jobs:
       - buildalert/build:
-          SLACK_MONITOR_PARAM_THRESHOLD_SECONDS: 50000
-          SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS_PER_USER: 0
-          SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS: 0
+          alert-threshold-seconds: 50000
+          alert-threshold-max-builds-per-user: 0
+          alert-threshold-max-builds-prev-minute: 0    
+
+# workflows:
+#   test:
+#     jobs:
+#       - buildalert/build:
+#           SLACK_MONITOR_PARAM_THRESHOLD_SECONDS: 50000
+#           SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS_PER_USER: 0
+#           SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS: 0
 
