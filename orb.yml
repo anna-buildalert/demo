@@ -212,7 +212,7 @@ jobs:
     steps:
       - run:
           name: Install python monitoring script dependencies
-          command: pip install requests
+          command: pip install --user requests
       - run:
           name: Run monitoring script
           command: *python_script
