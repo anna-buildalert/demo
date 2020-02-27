@@ -15,4 +15,8 @@ jobs:
 workflows:
   test:
     jobs:
-      - buildalert/build
+      - buildalert/build:
+          SLACK_MONITOR_PARAM_THRESHOLD_SECONDS: 50000
+          SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS_PER_USER: 0
+          SLACK_MONITOR_PARAM_THRESHOLD_MAX_BUILDS: 0
+
