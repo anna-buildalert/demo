@@ -5,12 +5,12 @@ version: 2.1
 orbs:
   buildalert: buildalert/demo@dev:0.0.2
 
-jobs:
-  probe:
-    docker:
-      - image: circleci/node:9.6.1
-    steps:
-      - run: echo 'am i running'
+# jobs:
+#   probe:
+#     docker:
+#       - image: circleci/node:9.6.1
+#     steps:
+#       - run: echo 'am i running'
 
 workflows:
   monitor-every-minute:
@@ -22,7 +22,7 @@ workflows:
               only:
                 - master
     jobs:
-      - probe
+      # - probe
       - buildalert/build:
           alert-threshold-seconds: 50000
           alert-threshold-max-builds-per-user: 0
