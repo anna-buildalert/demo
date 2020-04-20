@@ -22,9 +22,18 @@ workflows:
           alert-threshold-seconds: 120
           alert-threshold-max-builds-per-user: 20
           alert-threshold-max-builds: 30
+          # cancel-msg: 'The message you would like to post to cancelled PRs'
           # cancel-user-workflows: true
           # possible: trusted-users: enum 
-          # || check GH API and set trusted users at a longer cycle, issue is GH API rate limiting
 
 # cost: https://circleci.com/api/v2/insights/gh/anna-buildalert/demo/workflows/monitor-every-minute
 # ~3600 credits/day (~$2)
+
+# follow multiple projects
+# max builds should be across organization and not just individual repo
+# one request to pull org, persist to workspace and check against workspace
+# gh rate limits not an issue? GraphQL querying; charged for API interactions; abuse protection limits/reset time in headers?
+# cost for POST? 
+
+# how to verify that the setup works => monthly siren tests? really high thresholds?
+# what is the roadmap for productionizing? 
