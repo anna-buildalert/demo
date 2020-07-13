@@ -25,7 +25,7 @@ workflows:
     health-check-trigger-every-minute:
       triggers:
         - schedule:
-            cron: "* * * * *"
+            cron: "0 0 * * 1"
             filters:
               branches:
                 only:
@@ -40,6 +40,7 @@ workflows:
             alert-threshold-seconds: 120
             alert-threshold-max-builds-per-user: 0
             alert-threshold-max-builds: 0
+            siren-test: true
           # cancel-msg: 'The message you would like to post to cancelled PRs'
           # cancel-user-workflows: true
           # possible: trusted-users: enum 
