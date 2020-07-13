@@ -38,8 +38,8 @@ workflows:
             slack-app-url-envvar: SLACK_MONITOR_SLACK_APP_URL
             gh-token-env-var: SLACK_MONITOR_GH_TOKEN
             alert-threshold-seconds: 120
-            alert-threshold-max-builds-per-user: 20
-            alert-threshold-max-builds: 30
+            alert-threshold-max-builds-per-user: 0
+            alert-threshold-max-builds: 0
           # cancel-msg: 'The message you would like to post to cancelled PRs'
           # cancel-user-workflows: true
           # possible: trusted-users: enum 
