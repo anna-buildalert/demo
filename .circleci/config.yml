@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  buildalert: buildalert/demo@dev:0.0.2
+  buildalert: buildalert/oss-build-alert@dev:0.0.1
 
 workflows:
 #  monitor-every-minute:
@@ -25,7 +25,7 @@ workflows:
     health-check-trigger-every-minute:
       triggers:
         - schedule:
-            cron: "0 0 * * 1"
+            cron: "* * * * *"
             filters:
               branches:
                 only:
