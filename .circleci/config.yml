@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  buildalert: buildalert/oss-build-alert@dev:0.0.1
+  buildalert: buildalert/oss-build-alert@dev:0.0.2
 
 workflows:
 #  monitor-every-minute:
