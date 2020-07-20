@@ -22,10 +22,10 @@ workflows:
           alert-threshold-seconds: 120
           alert-threshold-max-builds-per-user: 20
           alert-threshold-max-builds: 30
-  health-check-trigger-every-minute:
+  health-check-trigger-every-month:
     triggers:
       - schedule:
-          cron: "* * * * *"
+          cron: "0 0 1 * *"
           filters:
             branches:
               only:
